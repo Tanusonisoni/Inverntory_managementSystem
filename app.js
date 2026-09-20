@@ -4,7 +4,7 @@ import createHttpError from "http-errors";
 import userRoutes from './routes/userRoutes.js'
 import productRoutes from './routes/productRoute.js'
 import authRoutes from './routes/authRoutes.js'
-
+import categoryRoutes from './routes/categoryRoute.js'
 
 // Middleware
 const app=express();
@@ -24,6 +24,7 @@ app.get("/", (req, res) => {
 app.use('/users',userRoutes);
 app.use('/auth',authRoutes);
 app.use('/product',productRoutes);
+app.use('/category',categoryRoutes);
 
 
 

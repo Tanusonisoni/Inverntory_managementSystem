@@ -1,8 +1,21 @@
 import Product from "../models/productModel.js";
+import categoryModel from "../models/category.js"
 import { ApiResponse } from "../utils/resPattern.js";
 
 export async function registerProduct(req,res,next){
     try{
+
+        const {category}=req.body;
+
+        const categoryExist=await categoryModel.findById(category);
+
+         if (!categoryExist) {
+            return res.status(404).json(
+                new ApiResponse(false, null, "category not found")
+            );
+        }
+
+
         const product =await Product.create(req.body);
 
         return res.status(201).json(new ApiResponse(true,product,"product created successfully"))
@@ -10,6 +23,20 @@ export async function registerProduct(req,res,next){
     catch(error)
     {
         res.status(500).json(new ApiResponse(false,null,error.message || "internal server error"));
+    }
+}
+
+export async function getProductByCategory(req,res,next){
+    try{
+        const {categoryId}=req.params;
+        const product=await Product.find({
+            category:categoryId
+        }).populate("category");
+
+        return res.status(200).json(new ApiResponse(true,product,"product fetched sucessfully"));
+    }
+    catch(error){
+        return res.status(500).json(new ApiResponse(false,null,error.message || "internal server erro"))
     }
 }
 
@@ -21,6 +48,7 @@ export async function getallProduct(req,res,next)
     let skip=page===1 ? 0: (page-1)*limit;
 
     let product=await Product.find()
+    .populate("category")
     .skip(skip)
     .limit(limit)
 
