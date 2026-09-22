@@ -6,6 +6,7 @@ import productRoutes from './routes/productRoute.js'
 import authRoutes from './routes/authRoutes.js'
 import categoryRoutes from './routes/categoryRoute.js'
 import supllierRoutes from './routes/supllierRoutes.js'
+import purchaseRoutes from './routes/purchaseRoutes.js'
 
 // Middleware
 const app=express();
@@ -26,7 +27,8 @@ app.use('/users',userRoutes);
 app.use('/auth',authRoutes);
 app.use('/product',productRoutes);
 app.use('/category',categoryRoutes);
-app.use('/supllier',supllierRoutes)
+app.use('/supllier',supllierRoutes);
+app.use('/purchase',purchaseRoutes);
 
 
 
