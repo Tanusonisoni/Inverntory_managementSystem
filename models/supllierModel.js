@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
 
-const userSchema = new Schema(
+const supplierSchema = new Schema(
     {
         name: {
             type: String,
@@ -10,26 +10,13 @@ const userSchema = new Schema(
 
         email: {
             type: String,
-            trim: true,
-            lowercase: true,
-            match: [
-                /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                "Please enter a valid email address"
-            ]
+            trim: true
         },
 
         phone: {
             type: String,
             required: true,
-            trim: true,
-
-            validate: {
-                validator: function (v) {
-                    return /^(?:\+91|91)?[6-9]\d{9}$/.test(v);
-                },
-                message: (props) =>
-                    `${props.value} is not a valid phone number`
-            }
+            trim: true
         },
 
         gstNumber: {
@@ -57,4 +44,4 @@ const userSchema = new Schema(
     }
 );
 
-export default model("user", userSchema);
+export default model("Supplier", supplierSchema);

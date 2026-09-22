@@ -56,7 +56,7 @@ export async function deleteUser(req,res,next)
         let user=await userModel.findByIdAndUpdate(req.user._id,{isDeleted:true},{returnDocument:"after"});
         if(!user) return res.status(404).json(new ApiResponse(false,null,"user not found"));
 
-        res.status(200).json(new ApiResponse(false,null,"user deleted successfully!"));
+        res.status(200).json(new ApiResponse(true,user,"user deleted successfully!"));
 
     }catch(error)
     {
