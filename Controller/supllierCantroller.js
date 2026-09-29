@@ -27,8 +27,8 @@ export async function getAllSupllier(req,res,next){
     return res.status(200).json(new ApiResponse(true,suppliers,"supplier fetched successfully"));
  }catch(error){
     return res.status(500).json
-    (new ApiResponse(false,null,"internal server error" 
-        || error.message));
+    (new ApiResponse(false,null,error.message|| "internal server error" 
+        ));
  }
 }
 

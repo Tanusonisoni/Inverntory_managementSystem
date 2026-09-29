@@ -7,6 +7,8 @@ import authRoutes from './routes/authRoutes.js'
 import categoryRoutes from './routes/categoryRoute.js'
 import supllierRoutes from './routes/supllierRoutes.js'
 import purchaseRoutes from './routes/purchaseRoutes.js'
+import goodsReciptsRoutes from './routes/goodsReciptRoutes.js'
+import inventoryRoutes from "./routes/inventoryRoutes.js"
 
 // Middleware
 const app=express();
@@ -29,6 +31,9 @@ app.use('/product',productRoutes);
 app.use('/category',categoryRoutes);
 app.use('/supllier',supllierRoutes);
 app.use('/purchase',purchaseRoutes);
+app.use('/goods-recipt',goodsReciptsRoutes);
+app.use('/inventory',inventoryRoutes);
+
 
 
 
