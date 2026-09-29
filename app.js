@@ -9,6 +9,8 @@ import supllierRoutes from './routes/supllierRoutes.js'
 import purchaseRoutes from './routes/purchaseRoutes.js'
 import goodsReciptsRoutes from './routes/goodsReciptRoutes.js'
 import inventoryRoutes from "./routes/inventoryRoutes.js"
+import locationRoutes from "./routes/locationRoutes.js"
+import stockMovement from "./routes/stockMovement.js"
 
 // Middleware
 const app=express();
@@ -33,8 +35,7 @@ app.use('/supllier',supllierRoutes);
 app.use('/purchase',purchaseRoutes);
 app.use('/goods-recipt',goodsReciptsRoutes);
 app.use('/inventory',inventoryRoutes);
-
-
-
+app.use('/location',locationRoutes);
+app.use('/stock',stockMovement);
 
 export default app;

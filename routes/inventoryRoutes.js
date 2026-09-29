@@ -1,5 +1,5 @@
 import Router from "express";
-import { createInventory,getAllInventory,
+import { createInventory,getAllInventory,minStock,
     getInventoryById,stockIn,upateInventory,stockOut } from "../Controller/inventoryController.js";
 
 const router=Router();
@@ -7,6 +7,9 @@ const router=Router();
 router.post("/",createInventory)
 router.get("/",getAllInventory)
 router.patch("/:id",upateInventory)
+
+router.get("/low-stock",minStock)
+
 router.get("/:id",getInventoryById)
 
 router.post("/:id/stock-in",stockIn);
