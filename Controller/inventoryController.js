@@ -11,7 +11,8 @@ export async function createInventory(req, res, next) {
 
         let product=await productModel.findById(req.body.product);
 
-        if(!product) {
+        if(!product) 
+        {
         return res.status(404).json(new ApiResponse(false,null,"prodct is not found"));
         };
 
@@ -29,7 +30,6 @@ export async function createInventory(req, res, next) {
         return res.status(500).json(new ApiResponse(false, null, error.message || "inernal server error"))
     }
 }
-
 export async function getInventoryById(req, res, next) {
     try {
         let inventory = await inventoryModel.findById(req.params.id).populate("product")
@@ -37,7 +37,9 @@ export async function getInventoryById(req, res, next) {
             return res.status(404).json(new ApiResponse(false, null, "inventory not found"))
         }
         return res.status(200).json(new ApiResponse(true, inventory, "successfull"))
-    } catch (error) {
+    } 
+    catch (error) 
+    {
         return res.status(500).json(new ApiResponse(false, null, error.message || "internal server error"))
     }
 }

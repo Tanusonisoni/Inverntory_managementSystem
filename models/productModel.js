@@ -23,7 +23,8 @@ const productSchema = new Schema(
     barcode: {
       type: String,
       unique: true,
-      sparse: true
+      sparse: true,
+      trim:true
     },
 
     category: {
