@@ -1,4 +1,6 @@
 import { ApiResponse } from "../utils/resPattern.js";
+import locationModel from "../models/locationModel.js";
+import productModel from "../models/productModel.js"
 import inventoryModel from "../models/inventorySchema.js";
 import stockMovementModel from "../models/stockMovementModel.js";
 
@@ -6,7 +8,20 @@ import stockMovementModel from "../models/stockMovementModel.js";
 export async function createInventory(req, res, next) {
 
     try {
+
+        let product=await productModel.findById(req.body.product);
+
+        if(!product) {
+        return res.status(404).json(new ApiResponse(false,null,"prodct is not found"));
+        };
+
+        let location=await locationModel.findById(req.body.location);
+        if(!location)
+        {
+         return res.status(404).json(new ApiResponse(false,null,"location is not found"));
+        }
         let inventory = await inventoryModel.create(req.body);
+
 
         return res.status(201).json(new ApiResponse(true, inventory, "inventory created"));
 
@@ -29,12 +44,30 @@ export async function getInventoryById(req, res, next) {
 
 export async function upateInventory(req, res, next) {
     try {
+
+        if(req.body.product){
+            let product=await productModel.findById(req.body.product);
+
+            if(!product)
+            {
+                return res.status(404).json(new ApiResponse(false,null,"product is not found"));
+            }
+        }
+        if(req.body.location)
+        {
+            let location=await locationModel.findById(req.body.location);
+
+            if(!location)
+            {
+                return res.status(404).json(new ApiResponse(false,null,"location is not found"));out
+            }
+        }
         let inventory = await inventoryModel.findByIdAndUpdate(req.params.id, req.body, {
             returnDocument: "after",
             runValidators: true
         });
         if (!inventory) {
-             return res.status(404).json(new ApiResponse(false, null, "inventory is not found"));
+            return res.status(404).json(new ApiResponse(false, null, "inventory is not found"));
         }
         return res.status(200).json(new ApiResponse(true, inventory, "successfull"))
 
@@ -91,10 +124,10 @@ export async function stockIn(req, res, next) {
         await inventory.save();
 
         await stockMovementModel.create({
-            product:inventory.product,
-            location:inventory.location,
-            type:"in",
-            quantity:quantity
+            product: inventory.product,
+            location: inventory.location,
+            type: "in",
+            quantity: sold
         })
 
         return res.status(200).json(new ApiResponse(true, inventory, "stock updated sucessfully"))
@@ -105,7 +138,16 @@ export async function stockIn(req, res, next) {
 }
 export async function stockOut(req, res, next) {
     try {
-        let inventory = await inventoryModel.findById(req.params.id);
+        // let inventory = await inventoryModel.findById(req.params.id);
+
+        let inventory = await inventoryModel
+            .findById(req.params.id)
+            // .populate("product")
+            // .populate("location");
+
+        console.log("PRODUCT:", inventory.product);
+        console.log("LOCATION:", inventory.location);
+
         if (!inventory) {
             return res.status(404).json(new ApiResponse(false, null, "inventory is not found"));
 
@@ -122,6 +164,29 @@ export async function stockOut(req, res, next) {
 
         await inventory.save();
 
+        // await stockMovementModel.create({
+        //     product: inventory.product,
+        //     location: inventory.location,
+        //     type: "out",
+        //     quantity: sold
+        // })
+
+        await inventory.save();
+
+console.log("MOVEMENT DATA:", {
+    product: inventory.product,
+    location: inventory.location,
+    type: "out",
+    quantity: sold
+});
+
+await stockMovementModel.create({
+    product: inventory.product,
+    location: inventory.location,
+    type: "out",
+    quantity: sold
+});
+
         return res.status(200).json(new ApiResponse(true, inventory, "stock out successfully"));
 
     } catch (error) {
@@ -130,8 +195,7 @@ export async function stockOut(req, res, next) {
 }
 
 export async function minStock(req, res, next) {
-    try 
-    {
+    try {
         let inventory = await inventoryModel.find({
             $expr: {
                 $lte: ["$quantity", "$minStock"]
