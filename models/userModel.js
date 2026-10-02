@@ -18,6 +18,18 @@ const userSchema = new Schema(
             ]
         },
 
+        role: {
+            type: String,
+            enum: ['admin', 'user'],
+            default: 'user'
+        },
+
+        department: {
+            type: String,
+            enum: ['purchase', 'inventory', 'sales'],
+            default: 'inventory'
+        },
+
         phone: {
             type: String,
             required: true,

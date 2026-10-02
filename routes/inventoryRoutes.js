@@ -1,18 +1,23 @@
 import Router from "express";
+import authMiddleware from "../middleware/authMiddleware.js";
 import { createInventory,getAllInventory,minStock,
     getInventoryById,stockIn,upateInventory,stockOut } from "../Controller/inventoryController.js";
 
 const router=Router();
 
-router.post("/",createInventory)
-router.get("/",getAllInventory)
-router.patch("/:id",upateInventory)
+router.post("/", authMiddleware, createInventory);
 
-router.get("/low-stock",minStock)
+router.get("/", authMiddleware, getAllInventory);
 
-router.get("/:id",getInventoryById)
+router.patch("/:id", authMiddleware, upateInventory);
 
-router.post("/:id/stock-in",stockIn);
-router.post("/:id/stock-out",stockOut)
+router.get("/low-stock", authMiddleware, minStock);
+
+router.get("/:id", authMiddleware, getInventoryById);
+
+router.post("/:id/stock-in", authMiddleware, stockIn);
+
+router.post("/:id/stock-out", authMiddleware, stockOut);
+
 
 export default router;

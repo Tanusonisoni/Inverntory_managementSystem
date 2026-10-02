@@ -5,9 +5,9 @@ import { getallUser, registerUser, updateUser,deleteUser} from '../Controller/us
 
 const router=Router();
 
-router.post("/register",registerUser);
+router.post("/register",authMiddleWare,allowRoles("admin"),registerUser);
 router.get("/alluser",authMiddleWare,allowRoles("admin"),getallUser)
-router.patch("/updateuser",authMiddleWare,allowRoles("user","admin"),updateUser);
+router.patch("/:id/updateuser",authMiddleWare,allowRoles("user","admin"),updateUser);
 router.delete("/deleteUser/:id",authMiddleWare,allowRoles("user","admin"),deleteUser);
 
 export default router;

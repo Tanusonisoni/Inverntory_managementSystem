@@ -35,12 +35,12 @@ export async function getallUser(req,res,next) {
 
 export async function updateUser(req,res,next) {
     try{
-        const{name,email,phone,gender,address}=req.body;
-        if(!name || !email || !phone || !gender || !address)
-        {
-         return res.status(400).json(new ApiResponse(false,null,"all fields are required"));
-        }
-        let userStatus=await userModel.findByIdAndUpdate(req.user._id,{name,email,phone,gender,address},{returnDocumnet:"after"});
+        // const{name,email,phone,gender,address}=req.body;
+        // if(!name || !email || !phone || !gender || !address)
+        // {
+        //  return res.status(400).json(new ApiResponse(false,null,"all fields are required"));
+        // }
+        let userStatus=await userModel.findByIdAndUpdate(req.params.id,req.body,{returnDocumnet:"after"});
         if(!userStatus) return res.staus(404).json(new ApiResponse(false,null,"user not found"));
 
         res.status(200).json(new ApiResponse(true,userStatus,"updated successfully"));

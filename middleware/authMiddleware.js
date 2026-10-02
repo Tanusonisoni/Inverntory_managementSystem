@@ -8,19 +8,19 @@ export default async function authMiddleware(req,res,next)
         const token=req.headers.authorization?.split(" ")[1];
         if(!token)
         {
-            return res.status(401).json(new ApiResponse(false,null,unauthorized))
+            return res.status(401).json(new ApiResponse(false,null,"unautharied"))
         }
         let tokenData=verifyToken(token);
 
         if(!tokenData) return res.status(401).json(new ApiResponse(false,null,"unautharized or invalud token"));
 
-        let user=await userModel.findOne({_id:tokenData.id,role:tokenData.role,isDeleted:false});
+        let user=await userModel.findOne({_id:tokenData.id,role:tokenData.role});
         if(!user)
         {
             return res.status(404).json(new ApiResponse(false,null,"user not found"));
 
         }
-      user =user.toObject();
+      user=user.toObject();
 
       delete user.password;
       delete user.isDeleted;
