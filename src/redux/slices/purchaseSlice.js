@@ -27,6 +27,22 @@ export const createPurchase = createAsyncThunk(
   }
 );
 
+
+export const approvePurchase = createAsyncThunk(
+    "purchase/approvePurchase",
+    async (id, { rejectWithValue }) => {
+        try {
+            return await updatePurchase(id, {
+                status: "approved"
+            });
+        } catch (error) {
+            return rejectWithValue(
+                error?.message || "Unable to approve purchase"
+            );
+        }
+    }
+);
+
 export const editPurchase = createAsyncThunk(
   "purchase/editPurchase",
   async ({ id, data }, { rejectWithValue }) => {

@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getAllUsers, addUser, updateUser, deleteUser } from "../../services/userApi";
+import { getAllUsers, addUser, updateUser, deleteUser, getUserById } from "../../services/userApi";
 
 const normalizeError = (error) =>
     error?.message || error?.error || error?.data?.message || "Something went wrong";
@@ -21,6 +21,17 @@ export const createUser = createAsyncThunk(
     async (payload, { rejectWithValue }) => {
         try {
             return await addUser(payload);
+        } catch (error) {
+            return rejectWithValue(normalizeError(error));
+        }
+    }
+);
+
+export const fetchUserById = createAsyncThunk(
+    "user/fetchUserById",
+    async (id, { rejectWithValue }) => {
+        try {
+            return await getUserById(id);
         } catch (error) {
             return rejectWithValue(normalizeError(error));
         }
@@ -54,6 +65,7 @@ const initialState = {
     items: [],
     loading: false,
     error: null,
+    selectedUser: null,
 };
 
 const userSlice = createSlice({
@@ -83,22 +95,35 @@ const userSlice = createSlice({
                 state.error = null;
             })
 
-           .addCase(createUser.fulfilled, (state, action) => {
-            state.loading = false;
+            .addCase(createUser.fulfilled, (state, action) => {
+                state.loading = false;
 
-            if (action.payload) {
-                state.items.unshift(action.payload);
-            }
-        })
+                if (action.payload) {
+                    state.items.unshift(action.payload);
+                }
+            })
 
-        .addCase(createUser.rejected, (state, action) => {
-            state.loading = false;
-            state.error = action.payload || action.error.message;
-        })
+            .addCase(createUser.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload || action.error.message;
+            })
+
+            .addCase(fetchUserById.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(fetchUserById.fulfilled, (state, action) => {
+                state.loading = false;
+                state.selectedUser = action.payload;
+            })
+            .addCase(fetchUserById.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload || action.error.message;
+            })
 
 
 
-},
+    },
 });
 
 export const { clearUserError } = userSlice.actions;

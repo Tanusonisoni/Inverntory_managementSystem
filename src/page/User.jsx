@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../components/Loader";
-import { fetchUsers, createUser } from "../redux/slices/userSlice";
+import { fetchUsers, createUser, fetchUserById } from "../redux/slices/userSlice";
 
 
 const User = () => {
@@ -18,7 +18,7 @@ const User = () => {
         password: "",
         department: ""
     })
-    const { items: users, loading, error } = useSelector((state) => state.user);
+    const { items: users, loading, error, selectedUser } = useSelector((state) => state.user);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -30,7 +30,7 @@ const User = () => {
     }
 
     const handleSubmit = async (e) => {
-      
+
         e.preventDefault();
 
         const result = await dispatch(createUser(formData));
@@ -54,7 +54,13 @@ const User = () => {
     useEffect(() => {
         dispatch(fetchUsers());
 
+
     }, [dispatch])
+
+    function handelClick(id) {
+
+        console.log(dispatch(fetchUserById(id)))
+    }
 
     return (
         <div>
@@ -192,12 +198,41 @@ const User = () => {
                                         <td>{user.email || "—"}</td>
                                         <td>{user.role || "Admin"}</td>
                                         <td><span className="badge success">{user.isActive === false ? "Inactive" : "Active"}</span></td>
+                                        <button
+                                            className="secondary-button"
+                                            onClick={()=>handelClick(user._id)}
+                                        >
+                                            View
+                                        </button>
                                     </tr>
                                 ))}
+
                             </tbody>
                         </table>
+
+                        {selectedUser && (
+                            <div className="panel" style={{ marginTop: "20px" }}>
+                                <h2>User Details</h2>
+
+                                <p><strong>Name:</strong> {selectedUser.name || "—"}</p>
+                                <p><strong>Email:</strong> {selectedUser.email || "—"}</p>
+                                <p><strong>Phone:</strong> {selectedUser.phone || "—"}</p>
+                                <p><strong>Gender:</strong> {selectedUser.gender || "—"}</p>
+                                <p><strong>Address:</strong> {selectedUser.address || "—"}</p>
+                                <p><strong>Department:</strong> {selectedUser.department || "—"}</p>
+                                <p><strong>Role:</strong> {selectedUser.role || "—"}</p>
+                                <p><strong>Status:</strong> {selectedUser.status || "—"}</p>
+                                <p>
+                                    <strong>Active:</strong>{" "}
+                                    {selectedUser.isActive ? "Yes" : "No"}
+                                </p>
+                                <p><strong>Created:</strong> {selectedUser.createdAt || "—"}</p>
+                                <p><strong>Updated:</strong> {selectedUser.updatedAt || "—"}</p>
+                            </div>
+                        )}
                     </div>
                 )}
+
 
                 {error ? <div className="error-box" style={{ marginTop: "16px" }}>{error}</div> : null}
             </div>

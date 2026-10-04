@@ -47,3 +47,19 @@ export async function deleteUser(id) {
     throw error.response?.data || { message: "Unable to delete user" };
   }
 }
+
+export async function getUserById(id) {
+    try {
+        const response = await axiosClient.get(
+            `${Urls.getUserById}/${id}`
+        );
+
+        return response.data?.data ?? response.data;
+    } catch (error) {
+        console.error("GET USER BY ID ERROR:", error);
+
+        throw error.response?.data || {
+            message: "Unable to fetch user"
+        };
+    }
+}

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../components/Loader";
-import { fetchPurchases, createPurchase } from "../redux/slices/purchaseSlice";
+import { fetchPurchases, createPurchase, approvePurchase } from "../redux/slices/purchaseSlice";
 import { fetchProducts } from "../redux/slices/productSlice";
 import { fetchSuppliers } from "../redux/slices/supplierSlice";
 
@@ -205,6 +205,7 @@ const Purchases = () => {
                                     <th>Total</th>
                                     <th>Status</th>
                                     <th>Date</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             {purchases.map((purchase, index) => (
@@ -232,6 +233,25 @@ const Purchases = () => {
                                         {purchase.orderDate
                                             ? new Date(purchase.orderDate).toLocaleDateString()
                                             : "—"}
+                                    </td>
+
+                                    <td>
+                                        {purchase.status === "pending" && (
+                                            <button
+                                                className="btn-primary"
+                                                onClick={async () => {
+                                                    const result = await dispatch(
+                                                        approvePurchase(purchase._id)
+                                                    );
+
+                                                    if (approvePurchase.fulfilled.match(result)) {
+                                                        dispatch(fetchPurchases());
+                                                    }
+                                                }}
+                                            >
+                                                Approve
+                                            </button>
+                                        )}
                                     </td>
 
                                 </tr>

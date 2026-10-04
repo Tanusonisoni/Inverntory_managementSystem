@@ -17,6 +17,23 @@ export async function getAllPurchases() {
   }
 }
 
+export async function approvePurchase(id) {
+    try {
+        const response = await axiosClient.patch(
+            `${Urls.purchases}/${id}`,
+            {
+                status: "approved"
+            }
+        );
+
+        return response.data?.data ?? response.data;
+    } catch (error) {
+        throw error.response?.data || {
+            message: "Unable to approve purchase"
+        };
+    }
+}
+
 export async function addPurchase(data) {
   try {
     const response = await axiosClient.post(Urls.purchases, data);
@@ -27,15 +44,15 @@ export async function addPurchase(data) {
   }
 }
 
-export async function updatePurchase(id, data) {
-  try {
-    const response = await axiosClient.patch(`${Urls.purchases}/${id}`, data);
-    return response.data?.data ?? response.data;
-  } catch (error) {
-    console.error("UPDATE PURCHASE ERROR:", error);
-    throw error.response?.data || { message: "Unable to update purchase" };
-  }
-}
+// export async function updatePurchase(id, data) {
+//   try {
+//     const response = await axiosClient.patch(`${Urls.purchases}/${id}`, data);
+//     return response.data?.data ?? response.data;
+//   } catch (error) {
+//     console.error("UPDATE PURCHASE ERROR:", error);
+//     throw error.response?.data || { message: "Unable to update purchase" };
+//   }
+// }
 export async function cancelPurchase(id) {
   try {
     const response = await axiosClient.patch(
@@ -46,4 +63,20 @@ export async function cancelPurchase(id) {
     console.error("CANCEL PURCHASE ERROR:", error);
     throw error.response?.data || { message: "Unable to cancel purchase" };
   }
+}
+
+
+export async function updatePurchase(id, data) {
+    try {
+        const response = await axiosClient.patch(
+            `${Urls.purchases}/${id}`,
+           data
+        );
+
+        return response.data?.data ?? response.data;
+    } catch (error) {
+        throw error.response?.data || {
+            message: "Unable to update purchase status"
+        };
+    }
 }
