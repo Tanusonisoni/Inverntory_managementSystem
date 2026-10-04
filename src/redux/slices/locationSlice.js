@@ -1,48 +1,48 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getAllInventory, addInventory, updateInventory, deleteInventory } from "../../services/inventoryApi";
+import { getAllLocations, addLocation, updateLocation, deleteLocation } from "../../services/locationApi";
 
 const normalizeError = (error) =>
   error?.message || error?.error || error?.data?.message || "Something went wrong";
 
-export const fetchInventory = createAsyncThunk(
-  "inventory/fetchInventory",
+export const fetchLocations = createAsyncThunk(
+  "location/fetchLocations",
   async (_, { rejectWithValue }) => {
     try {
-      const inventory = await getAllInventory();
-      return inventory || [];
+      const locations = await getAllLocations();
+      return locations || [];
     } catch (error) {
       return rejectWithValue(normalizeError(error));
     }
   }
 );
 
-export const createInventory = createAsyncThunk(
-  "inventory/createInventory",
+export const createLocation = createAsyncThunk(
+  "location/createLocation",
   async (payload, { rejectWithValue }) => {
     try {
-      return await addInventory(payload);
+      return await addLocation(payload);
     } catch (error) {
       return rejectWithValue(normalizeError(error));
     }
   }
 );
 
-export const editInventory = createAsyncThunk(
-  "inventory/editInventory",
+export const editLocation = createAsyncThunk(
+  "location/editLocation",
   async ({ id, data }, { rejectWithValue }) => {
     try {
-      return await updateInventory(id, data);
+      return await updateLocation(id, data);
     } catch (error) {
       return rejectWithValue(normalizeError(error));
     }
   }
 );
 
-export const removeInventory = createAsyncThunk(
-  "inventory/removeInventory",
+export const removeLocation = createAsyncThunk(
+  "location/removeLocation",
   async (id, { rejectWithValue }) => {
     try {
-      await deleteInventory(id);
+      await deleteLocation(id);
       return id;
     } catch (error) {
       return rejectWithValue(normalizeError(error));
@@ -56,42 +56,42 @@ const initialState = {
   error: null,
 };
 
-const inventorySlice = createSlice({
-  name: "inventory",
+const locationSlice = createSlice({
+  name: "location",
   initialState,
   reducers: {
-    clearInventoryError: (state) => {
+    clearLocationError: (state) => {
       state.error = null;
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchInventory.pending, (state) => {
+      .addCase(fetchLocations.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchInventory.fulfilled, (state, action) => {
+      .addCase(fetchLocations.fulfilled, (state, action) => {
         state.loading = false;
         state.items = action.payload || [];
       })
-      .addCase(fetchInventory.rejected, (state, action) => {
+      .addCase(fetchLocations.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || action.error.message;
       })
-      .addCase(createInventory.fulfilled, (state, action) => {
+      .addCase(createLocation.fulfilled, (state, action) => {
         if (action.payload) state.items.unshift(action.payload);
       })
-      .addCase(editInventory.fulfilled, (state, action) => {
+      .addCase(editLocation.fulfilled, (state, action) => {
         const item = action.payload;
         if (!item) return;
         const index = state.items.findIndex((entry) => String(entry._id || entry.id) === String(item._id || item.id));
         if (index !== -1) state.items[index] = item;
       })
-      .addCase(removeInventory.fulfilled, (state, action) => {
+      .addCase(removeLocation.fulfilled, (state, action) => {
         state.items = state.items.filter((item) => String(item._id || item.id) !== String(action.payload));
       });
   },
 });
 
-export const { clearInventoryError } = inventorySlice.actions;
-export default inventorySlice.reducer;
+export const { clearLocationError } = locationSlice.actions;
+export default locationSlice.reducer;
