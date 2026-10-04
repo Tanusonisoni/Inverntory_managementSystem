@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getAllPurchases, addPurchase, updatePurchase, deletePurchase } from "../../services/purchaseApi";
+import { getAllPurchases, addPurchase, updatePurchase } from "../../services/purchaseApi";
 
 const normalizeError = (error) =>
   error?.message || error?.error || error?.data?.message || "Something went wrong";
@@ -38,17 +38,17 @@ export const editPurchase = createAsyncThunk(
   }
 );
 
-export const removePurchase = createAsyncThunk(
-  "purchase/removePurchase",
-  async (id, { rejectWithValue }) => {
-    try {
-      await deletePurchase(id);
-      return id;
-    } catch (error) {
-      return rejectWithValue(normalizeError(error));
-    }
-  }
-);
+// export const removePurchase = createAsyncThunk(
+//   "purchase/removePurchase",
+//   async (id, { rejectWithValue }) => {
+//     try {
+//       await deletePurchase(id);
+//       return id;
+//     } catch (error) {
+//       return rejectWithValue(normalizeError(error));
+//     }
+//   }
+// );
 
 const initialState = {
   items: [],

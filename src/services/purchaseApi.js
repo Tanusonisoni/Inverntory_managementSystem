@@ -36,13 +36,14 @@ export async function updatePurchase(id, data) {
     throw error.response?.data || { message: "Unable to update purchase" };
   }
 }
-
-export async function deletePurchase(id) {
+export async function cancelPurchase(id) {
   try {
-    const response = await axiosClient.delete(`${Urls.purchases}/${id}`);
-    return response.data?.data ?? response.data ?? { id };
+    const response = await axiosClient.patch(
+      `${Urls.purchases}/${id}/cancel`
+    );
+    return response.data?.data ?? response.data;
   } catch (error) {
-    console.error("DELETE PURCHASE ERROR:", error);
-    throw error.response?.data || { message: "Unable to delete purchase" };
+    console.error("CANCEL PURCHASE ERROR:", error);
+    throw error.response?.data || { message: "Unable to cancel purchase" };
   }
 }

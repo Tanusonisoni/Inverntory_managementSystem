@@ -9,7 +9,7 @@ const normalizeList = (payload) => {
 
 export async function getAllUsers() {
   try {
-    const response = await axiosClient.get(Urls.users);
+    const response = await axiosClient.get(Urls.getAllUsers);
     return normalizeList(response.data);
   } catch (error) {
     console.error("USER API ERROR:", error);
@@ -19,7 +19,8 @@ export async function getAllUsers() {
 
 export async function addUser(data) {
   try {
-    const response = await axiosClient.post(Urls.users, data);
+    console.log("data to api ",data);
+    const response = await axiosClient.post(`${Urls.users}/register`, data);
     return response.data?.data ?? response.data;
   } catch (error) {
     console.error("ADD USER ERROR:", error);
@@ -29,7 +30,7 @@ export async function addUser(data) {
 
 export async function updateUser(id, data) {
   try {
-    const response = await axiosClient.patch(`${Urls.users}/${id}`, data);
+    const response = await axiosClient.patch(`${Urls.updateUser}/${id}/updateusers`, data);
     return response.data?.data ?? response.data;
   } catch (error) {
     console.error("UPDATE USER ERROR:", error);
@@ -39,7 +40,7 @@ export async function updateUser(id, data) {
 
 export async function deleteUser(id) {
   try {
-    const response = await axiosClient.delete(`${Urls.users}/${id}`);
+    const response = await axiosClient.delete(`${Urls.deleteUser}/${id}`);
     return response.data?.data ?? response.data ?? { id };
   } catch (error) {
     console.error("DELETE USER ERROR:", error);

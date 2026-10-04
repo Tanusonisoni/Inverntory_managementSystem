@@ -1,7 +1,12 @@
+import { deleteUser, getAllUsers } from "./userApi";
+
 export const Urls = {
     login: "/auth/login",
 
     users: "/users",
+    getAllUsers:"/users/alluser",
+    updateUser:"/users",
+    deleteUser:"/users/deleteUser",
 
     // Product
     registerProduct: "/product/registerPro",
