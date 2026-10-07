@@ -2,14 +2,13 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getAllStockMovements, addStockMovement, updateStockMovement, deleteStockMovement } from "../../services/stockMovementApi";
 
 const normalizeError = (error) =>
-  error?.message || error?.error || error?.data?.message || "Something went wrong";
+  error?.response?.data?.message || error?.data?.message || error?.message || error?.error || "Something went wrong";
 
 export const fetchStockMovements = createAsyncThunk(
   "stockMovement/fetchStockMovements",
-  async (_, { rejectWithValue }) => {
+  async (page = 1, { rejectWithValue }) => {
     try {
-      const movements = await getAllStockMovements();
-      return movements || [];
+      return await getAllStockMovements(page);
     } catch (error) {
       return rejectWithValue(normalizeError(error));
     }
@@ -52,6 +51,7 @@ export const removeStockMovement = createAsyncThunk(
 
 const initialState = {
   items: [],
+  pagination: null,
   loading: false,
   error: null,
 };
@@ -72,7 +72,8 @@ const stockMovementSlice = createSlice({
       })
       .addCase(fetchStockMovements.fulfilled, (state, action) => {
         state.loading = false;
-        state.items = action.payload || [];
+        state.items = action.payload?.items || [];
+        state.pagination = action.payload?.pagination || null;
       })
       .addCase(fetchStockMovements.rejected, (state, action) => {
         state.loading = false;

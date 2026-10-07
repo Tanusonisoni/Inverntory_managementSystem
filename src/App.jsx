@@ -12,6 +12,8 @@ import StockMovement from "./page/StockMovement";
 import Purchases from "./page/Purchases";
 import GoodsReceipt from "./page/GoodsReceipt";
 import User from "./page/User";
+import AIAgent from "./page/AIAgent";
+import RoleRoute from "./components/RoleRoute";
 
 function App() {
     return (
@@ -28,18 +30,19 @@ function App() {
                 >
                     <Route index element={<Navigate to="/dashboard" replace />} />
                     <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="/products" element={<Products />} />
-                    <Route path="/products/add" element={<Products />} />
-                    <Route path="/products/:id" element={<Products />} />
-                    <Route path="/products/edit/:id" element={<Products />} />
-                    <Route path="/categories" element={<Categories />} />
-                    <Route path="/suppliers" element={<Supplier />} />
-                    <Route path="/locations" element={<Location />} />
-                    <Route path="/inventory" element={<Inventory />} />
-                    <Route path="/stock-movement" element={<StockMovement />} />
-                    <Route path="/purchases" element={<Purchases />} />
-                    <Route path="/goods-receipt" element={<GoodsReceipt />} />
-                    <Route path="/users" element={<User />} />
+                    <Route path="/products" element={<RoleRoute roles={["admin", "inventory", "sales"]}><Products /></RoleRoute>} />
+                    <Route path="/products/add" element={<RoleRoute roles={["admin", "inventory", "sales"]}><Products /></RoleRoute>} />
+                    <Route path="/products/:id" element={<RoleRoute roles={["admin", "inventory"]}><Products /></RoleRoute>} />
+                    <Route path="/products/edit/:id" element={<RoleRoute roles={["admin", "inventory", "sales"]}><Products /></RoleRoute>} />
+                    <Route path="/categories" element={<RoleRoute roles={["admin", "inventory"]}><Categories /></RoleRoute>} />
+                    <Route path="/suppliers" element={<RoleRoute roles={["admin", "purchase"]}><Supplier /></RoleRoute>} />
+                    <Route path="/locations" element={<RoleRoute roles={["admin", "inventory"]}><Location /></RoleRoute>} />
+                    <Route path="/inventory" element={<RoleRoute roles={["admin", "inventory"]}><Inventory /></RoleRoute>} />
+                    <Route path="/stock-movement" element={<RoleRoute roles={["admin", "inventory", "sales"]}><StockMovement /></RoleRoute>} />
+                    <Route path="/purchases" element={<RoleRoute roles={["admin", "purchase"]}><Purchases /></RoleRoute>} />
+                    <Route path="/goods-receipt" element={<RoleRoute roles={["admin", "purchase"]}><GoodsReceipt /></RoleRoute>} />
+                    <Route path="/users" element={<RoleRoute roles={["admin"]}><User /></RoleRoute>} />
+                    <Route path="/ai-assistant" element={<RoleRoute roles={["admin", "inventory", "purchase", "sales"]}><AIAgent /></RoleRoute>} />
                 </Route>
 
 

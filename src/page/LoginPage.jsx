@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Navigate, useNavigate, Link } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 
 import { login } from "../redux/slices/authSlice";
 
@@ -12,6 +12,7 @@ const initialForm = {
 const LoginPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { isAuthenticated, loading, error } = useSelector(
     (state) => state.auth
@@ -56,6 +57,11 @@ const LoginPage = () => {
           <h1>Inventory Management System</h1>
 
           <p>Sign in to continue to the dashboard.</p>
+          {new URLSearchParams(location.search).get("session") === "expired" && (
+            <div className="error-box" role="alert" style={{ marginTop: "14px" }}>
+              Your session expired or the access token was rejected. Please sign in again.
+            </div>
+          )}
         </div>
 
         <form className="form-grid" onSubmit={handleSubmit}>

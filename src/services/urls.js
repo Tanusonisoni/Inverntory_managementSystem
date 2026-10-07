@@ -2,6 +2,7 @@ import { deleteUser, getAllUsers } from "./userApi";
 
 export const Urls = {
     login: "/auth/login",
+    aiAsk: "/ai/ask",
 
      users: "/users",
     registerUser: "/users/register",
@@ -14,7 +15,7 @@ export const Urls = {
     registerProduct: "/product/registerPro",
     allProducts: "/product/getproduct",
     productQR: "/product/qr",
-    productById: "/product/getProductById",
+    productById: "/product/updateProduct",
     updateProduct: "/product/updatepro",
     deleteProduct: "/product/deletePro",
     productsByCategory: "/product/proCategory",

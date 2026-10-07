@@ -7,6 +7,8 @@ import { fetchCategories } from "../redux/slices/categorySlice";
 import { fetchSuppliers } from "../redux/slices/supplierSlice";
 import { fetchInventory } from "../redux/slices/invnetorySlice";
 import { fetchStockMovements } from "../redux/slices/stockMovementSlice";
+import { fetchPurchases } from "../redux/slices/purchaseSlice";
+import { fetchUsers } from "../redux/slices/userSlice";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -16,6 +18,9 @@ const Dashboard = () => {
   const { items: suppliers } = useSelector((state) => state.supplier);
   const { items: inventory } = useSelector((state) => state.inventory);
   const { items: movements } = useSelector((state) => state.stockMovement);
+  const { items: purchases } = useSelector((state) => state.purchase);
+  const { items: users } = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
     dispatch(fetchProducts());
@@ -23,7 +28,9 @@ const Dashboard = () => {
     dispatch(fetchSuppliers());
     dispatch(fetchInventory());
     dispatch(fetchStockMovements());
-  }, [dispatch]);
+    dispatch(fetchPurchases());
+    if (user?.role === "admin") dispatch(fetchUsers());
+  }, [dispatch, user?.role]);
 
   const totalInventory = (inventory || []).reduce((sum, item) => {
     const quantity = Number(item.quantity ?? item.currentStock ?? item.stockQuantity ?? 0);
@@ -32,7 +39,7 @@ const Dashboard = () => {
 
   const lowStockItems = (inventory || []).filter((item) => {
     const quantity = Number(item.quantity ?? item.currentStock ?? item.stockQuantity ?? 0);
-    const minimum = Number(item.minimumStock ?? item.minStock ?? item.reorderLevel ?? 0);
+    const minimum = Number(item.minStock ?? item.minimumStock ?? item.reorderLevel ?? 0);
     return quantity <= minimum;
   });
 
@@ -46,8 +53,8 @@ const Dashboard = () => {
     <div>
       <div className="page-header">
         <div>
-          <p className="eyebrow">Inventory overview</p>
-          <h1>Dashboard</h1>
+          <p className="eyebrow">{user?.role === "admin" ? "Administration" : `${user?.department || "Employee"} workspace`}</p>
+          <h1>{user?.role === "admin" ? "Admin Dashboard" : "Employee Dashboard"}</h1>
         </div>
       </div>
 
@@ -57,6 +64,8 @@ const Dashboard = () => {
         <StatsCard title="Total Suppliers" value={(suppliers || []).length} subtitle="Registered vendors" tone="success" />
         <StatsCard title="Total Inventory" value={totalInventory} subtitle="Units in stock" tone="warning" />
         <StatsCard title="Low Stock Items" value={lowStockItems.length} subtitle="Needs attention" tone="warning" />
+        <StatsCard title="Pending Purchases" value={purchases.filter((purchase) => purchase.status === "pending").length} subtitle="Awaiting review" tone="info" />
+        {user?.role === "admin" ? <StatsCard title="Users" value={users.length} subtitle="Registered team members" tone="default" /> : null}
       </div>
 
       <div className="panel">

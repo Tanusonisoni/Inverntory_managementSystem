@@ -52,15 +52,17 @@ const navItems = [
         label: "Users",
         access: ["admin"],
     },
+    {
+        to: "/ai-assistant",
+        label: "AI Assistant",
+        access: ["admin", "inventory", "purchase", "sales"],
+    },
 ];
 
 const Sidebar = () => {
     const user = useSelector((state) => state.auth.user);
 
-    console.log("user", user);
-
     const access = user?.role === "admin" ? "admin" : user?.department;
-    console.log("acess", access);
 
     return (
         <aside className="sidebar">
@@ -69,7 +71,7 @@ const Sidebar = () => {
 
                 <div>
                     <h3>Inventory</h3>
-                    <small>Admin Panel</small>
+                    <small>{user?.role === "admin" ? "Admin Panel" : `${user?.department || "Employee"} Team`}</small>
                 </div>
             </div>
 
@@ -82,7 +84,7 @@ const Sidebar = () => {
                             to={item.to}
                             end={item.to === "/dashboard"}
                             className={({ isActive }) =>
-                                isActive ? "nav-item active" : "nav-item"
+                                `nav-item${item.to === "/ai-assistant" ? " ai-nav-item" : ""}${isActive ? " active" : ""}`
                             }
                         >
                             {item.label}

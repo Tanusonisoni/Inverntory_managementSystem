@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getAllLocations, addLocation, updateLocation, deleteLocation } from "../../services/locationApi";
 
 const normalizeError = (error) =>
-  error?.message || error?.error || error?.data?.message || "Something went wrong";
+  error?.response?.data?.message || error?.data?.message || error?.message || error?.error || "Something went wrong";
 
 export const fetchLocations = createAsyncThunk(
   "location/fetchLocations",

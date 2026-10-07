@@ -8,13 +8,8 @@ const normalizeList = (payload) => {
 };
 
 export async function getAllLocations() {
-  try {
-    const response = await axiosClient.get(Urls.locations);
-    return normalizeList(response.data);
-  } catch (error) {
-    console.error("LOCATION API ERROR:", error);
-    return [];
-  }
+  const response = await axiosClient.get(Urls.locations);
+  return normalizeList(response.data);
 }
 
 export async function addLocation(data) {

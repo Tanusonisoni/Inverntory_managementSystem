@@ -7,14 +7,14 @@ const normalizeList = (payload) => {
   return payload.data ?? payload.movements ?? payload.items ?? [];
 };
 
-export async function getAllStockMovements() {
-  try {
-    const response = await axiosClient.get(Urls.stockMovement);
-    return normalizeList(response.data);
-  } catch (error) {
-    console.error("STOCK MOVEMENT API ERROR:", error);
-    return [];
-  }
+export async function getAllStockMovements(page = 1) {
+  const response = await axiosClient.get(Urls.stockMovement, { params: { page, limit: 25, list: 25 } });
+  const result = response.data?.data ?? response.data;
+  if (Array.isArray(result)) return { items: result, pagination: null };
+  return {
+    items: result?.movement ?? result?.items ?? [],
+    pagination: result?.pagination ?? null,
+  };
 }
 
 export async function addStockMovement(data) {

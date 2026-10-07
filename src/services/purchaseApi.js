@@ -8,13 +8,8 @@ const normalizeList = (payload) => {
 };
 
 export async function getAllPurchases() {
-  try {
-    const response = await axiosClient.get(Urls.purchases);
-    return normalizeList(response.data);
-  } catch (error) {
-    console.error("PURCHASE API ERROR:", error);
-    return [];
-  }
+  const response = await axiosClient.get(Urls.purchases);
+  return normalizeList(response.data);
 }
 
 export async function approvePurchase(id) {

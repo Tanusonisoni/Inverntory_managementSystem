@@ -4,12 +4,13 @@ import { logout } from "../redux/slices/authSlice";
 const Navbar = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
+  const heading = user?.role === "admin" ? "Admin Dashboard" : `${user?.department || "Employee"} Workspace`;
 
   return (
     <header className="topbar">
       <div>
         <p className="eyebrow">Overview</p>
-        <h2>Admin Dashboard</h2>
+        <h2>{heading}</h2>
       </div>
 
       <div className="topbar-actions">

@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getAllUsers, addUser, updateUser, deleteUser, getUserById } from "../../services/userApi";
 
 const normalizeError = (error) =>
-    error?.message || error?.error || error?.data?.message || "Something went wrong";
+    error?.response?.data?.message || error?.data?.message || error?.message || error?.error || "Something went wrong";
 
 export const fetchUsers = createAsyncThunk(
     "user/fetchUsers",
@@ -75,6 +75,9 @@ const userSlice = createSlice({
         clearUserError: (state) => {
             state.error = null;
         },
+        clearSelectedUser: (state) => {
+            state.selectedUser = null;
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -120,11 +123,45 @@ const userSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload || action.error.message;
             })
-
-
-
+            .addCase(editUser.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(editUser.fulfilled, (state, action) => {
+                state.loading = false;
+                const updatedUser = action.payload;
+                if (!updatedUser) return;
+                const index = state.items.findIndex(
+                    (user) => String(user._id || user.id) === String(updatedUser._id || updatedUser.id)
+                );
+                if (index !== -1) state.items[index] = updatedUser;
+                if (String(state.selectedUser?._id) === String(updatedUser._id)) {
+                    state.selectedUser = updatedUser;
+                }
+            })
+            .addCase(editUser.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload || action.error.message;
+            })
+            .addCase(removeUser.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(removeUser.fulfilled, (state, action) => {
+                state.loading = false;
+                state.items = state.items.filter(
+                    (user) => String(user._id || user.id) !== String(action.payload)
+                );
+                if (String(state.selectedUser?._id) === String(action.payload)) {
+                    state.selectedUser = null;
+                }
+            })
+            .addCase(removeUser.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload || action.error.message;
+            })
     },
 });
 
-export const { clearUserError } = userSlice.actions;
+export const { clearUserError, clearSelectedUser } = userSlice.actions;
 export default userSlice.reducer;

@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getAllPurchases, addPurchase, updatePurchase } from "../../services/purchaseApi";
 
 const normalizeError = (error) =>
-  error?.message || error?.error || error?.data?.message || "Something went wrong";
+  error?.response?.data?.message || error?.data?.message || error?.message || error?.error || "Something went wrong";
 
 export const fetchPurchases = createAsyncThunk(
   "purchase/fetchPurchases",

@@ -10,6 +10,11 @@ const Categories = () => {
   const { items: categories, loading, error } = useSelector((state) => state.category);
   const [formData, setFormData] = useState(initialForm);
   const [editingId, setEditingId] = useState(null);
+  const [search, setSearch] = useState("");
+
+  const visibleCategories = categories.filter((category) =>
+    `${category.name || ""} ${category.description || ""}`.toLowerCase().includes(search.toLowerCase())
+  );
 
   useEffect(() => {
     dispatch(fetchCategories());
@@ -65,10 +70,14 @@ const Categories = () => {
       </form>
 
       <div className="panel" style={{ marginTop: "20px" }}>
+        <div className="form-field" style={{ maxWidth: "380px", marginBottom: "16px" }}>
+          <label htmlFor="category-search">Search categories</label>
+          <input id="category-search" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Name or description..." />
+        </div>
         {loading && categories.length === 0 ? (
           <Loader label="Loading categories..." />
-        ) : categories.length === 0 ? (
-          <div className="empty-state">No categories available yet.</div>
+        ) : visibleCategories.length === 0 ? (
+          <div className="empty-state">No matching categories found.</div>
         ) : (
           <div className="table-wrap">
             <table className="data-table">
@@ -80,7 +89,7 @@ const Categories = () => {
                 </tr>
               </thead>
               <tbody>
-                {categories.map((category) => (
+                {visibleCategories.map((category) => (
                   <tr key={category._id || category.id}>
                     <td>{category.name}</td>
                     <td>{category.description || "—"}</td>

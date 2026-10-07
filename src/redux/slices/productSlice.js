@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { addProduct, getAllProducts, updateProduct, deleteProduct, getProductById } from "../../services/productApi";
+import { addProduct, getAllProducts, updateProduct, deleteProduct, getProductById } from "../../services/productapi";
 
 const normalizeError = (error) =>
-  error?.message || error?.error || error?.data?.message || "Something went wrong";
+  error?.response?.data?.message || error?.data?.message || error?.message || error?.error || "Something went wrong";
 
 export const fetchProducts = createAsyncThunk(
   "product/fetchProducts",

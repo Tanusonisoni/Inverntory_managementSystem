@@ -8,13 +8,8 @@ const normalizeList = (payload) => {
 };
 
 export async function getAllSuppliers() {
-  try {
-    const response = await axiosClient.get(Urls.supplier || Urls.supplier || "/supplier");
-    return normalizeList(response.data);
-  } catch (error) {
-    console.error("SUPPLIER API ERROR:", error);
-    return [];
-  }
+  const response = await axiosClient.get(Urls.supplier, { params: { page: 1, limit: 100 } });
+  return normalizeList(response.data);
 }
 
 export async function addSupplier(data) {
@@ -29,7 +24,7 @@ export async function addSupplier(data) {
 
 export async function updateSupplier(id, data) {
   try {
-    const response = await axiosClient.patch(`${Urls.pathchSupplier || Urls.supplier || "/supplier"}/${id}`, data);
+    const response = await axiosClient.patch(`${Urls.updateSupplier}/${id}`, data);
     return response.data?.data ?? response.data;
   } catch (error) {
     console.error("UPDATE SUPPLIER ERROR:", error);

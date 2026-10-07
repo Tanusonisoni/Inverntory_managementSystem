@@ -8,13 +8,23 @@ const normalizeList = (payload) => {
 };
 
 export async function getAllInventory() {
-  try {
-    const response = await axiosClient.get(Urls.inventory);
-    return normalizeList(response.data);
-  } catch (error) {
-    console.error("INVENTORY API ERROR:", error);
-    return [];
-  }
+  const response = await axiosClient.get(Urls.inventory, { params: { page: 1, limit: 100 } });
+  return normalizeList(response.data);
+}
+
+export async function getLowStockInventory() {
+  const response = await axiosClient.get(`${Urls.inventory}/low-stock`);
+  return normalizeList(response.data);
+}
+
+export async function stockInInventory(id, quantity) {
+  const response = await axiosClient.post(`${Urls.inventory}/${id}/stock-in`, { quantity });
+  return response.data?.data ?? response.data;
+}
+
+export async function stockOutInventory(id, quantity) {
+  const response = await axiosClient.post(`${Urls.inventory}/${id}/stock-out`, { sold: quantity });
+  return response.data?.data ?? response.data;
 }
 
 export async function addInventory(data) {

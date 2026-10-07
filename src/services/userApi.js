@@ -8,13 +8,8 @@ const normalizeList = (payload) => {
 };
 
 export async function getAllUsers() {
-  try {
-    const response = await axiosClient.get(Urls.getAllUsers);
-    return normalizeList(response.data);
-  } catch (error) {
-    console.error("USER API ERROR:", error);
-    return [];
-  }
+  const response = await axiosClient.get(Urls.getAllUsers, { params: { page: 1, limit: 100 } });
+  return normalizeList(response.data);
 }
 
 export async function addUser(data) {
@@ -30,7 +25,7 @@ export async function addUser(data) {
 
 export async function updateUser(id, data) {
   try {
-    const response = await axiosClient.patch(`${Urls.updateUser}/${id}/updateusers`, data);
+    const response = await axiosClient.patch(`${Urls.updateUser}/${id}/updateuser`, data);
     return response.data?.data ?? response.data;
   } catch (error) {
     console.error("UPDATE USER ERROR:", error);

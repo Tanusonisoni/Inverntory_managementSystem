@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getAllInventory, addInventory, updateInventory, deleteInventory } from "../../services/inventoryApi";
 
 const normalizeError = (error) =>
-  error?.message || error?.error || error?.data?.message || "Something went wrong";
+  error?.response?.data?.message || error?.data?.message || error?.message || error?.error || "Something went wrong";
 
 export const fetchInventory = createAsyncThunk(
   "inventory/fetchInventory",

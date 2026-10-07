@@ -8,7 +8,6 @@ const normalizeList = (payload) => {
 };
 
 export async function getAllProducts() {
-  try {
     const response = await axiosClient.get(Urls.allProducts, {
       params: {
         page: 1,
@@ -16,30 +15,28 @@ export async function getAllProducts() {
       },
     });
     return normalizeList(response.data);
-  } catch (error) {
-    console.error("PRODUCT API ERROR:", error);
-    return [];
-  }
 }
 
 export async function getProductById(id) {
-  try {
-    const response = await axiosClient.get(`${Urls.productById}/${id}`);
-    return response.data?.data ?? response.data;
-  } catch (error) {
-    console.error("GET PRODUCT BY ID ERROR:", error);
-    return null;
-  }
+  const response = await axiosClient.get(`${Urls.productById}/${id}`);
+  return response.data?.data ?? response.data;
 }
 
 export async function addProduct(productData) {
   try {
     const response = await axiosClient.post(Urls.registerProduct, productData);
-    return response.data?.data ?? response.data;
+    const result = response.data?.data ?? response.data;
+    return result.product ?? result;
   } catch (error) {
     console.error("ADD PRODUCT ERROR:", error);
     throw error.response?.data || { message: "Unable to add product" };
   }
+
+}
+
+export async function getProductQrCode(id) {
+  const response = await axiosClient.get(`${Urls.productQR}/${id}`, { responseType: "blob" });
+  return URL.createObjectURL(response.data);
 }
 
 export async function updateProduct(id, productData) {

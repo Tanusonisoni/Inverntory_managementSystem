@@ -8,13 +8,8 @@ const normalizeList = (payload) => {
 };
 
 export async function getAllCategories() {
-  try {
-    const response = await axiosClient.get(Urls.allCategories);
-    return normalizeList(response.data);
-  } catch (error) {
-    console.error("CATEGORY API ERROR:", error);
-    return [];
-  }
+  const response = await axiosClient.get(Urls.allCategories);
+  return normalizeList(response.data);
 }
 
 export async function addCategory(categoryData) {
