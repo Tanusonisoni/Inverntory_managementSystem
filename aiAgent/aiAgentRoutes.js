@@ -3,7 +3,7 @@ import { askAI } from "./agent.js";
 
 const router=Router();
 
-router.get("/test",(req,res,next)=>(
+router.get("/test",(req,reduxjs)=>(
     res.json({success:true,
         message:"Ai agent route is working"
     })
